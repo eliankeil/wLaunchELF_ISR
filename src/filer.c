@@ -4475,6 +4475,8 @@ int getFilePath(char *out, int cnfmode)
 						if (genCmpFileExt(files[top + i].name, "ELF"))
 							iconcolr = COLOR_GRAPH2;
 						else if (
+									genCmpFileExt(files[top + i].name, "YML") ||
+									genCmpFileExt(files[top + i].name, "YAML") ||
 									genCmpFileExt(files[top + i].name, "TXT") || 
 									genCmpFileExt(files[top + i].name, "CFG") || 
 									genCmpFileExt(files[top + i].name, "CNF") || 
