@@ -687,7 +687,7 @@ void initConfig(void)
     setting->color[COLOR_GRAPH4] = DEF_COLOR8;
     // nuevos: colores del editor (defaults clásicos)
     setting->color[COLOR_EDITOR_BG]   = GS_SETREG_RGBA(160,160,160,0); // gris claro original
-    setting->color[COLOR_EDITOR_TEXT] = GS_SETREG_RGBA(0,0,0,0);       // negro original
+    setting->color[COLOR_EDITOR_TEXT] = GS_SETREG_RGBA(160,160,160,0);       // negro original
     setting->screen_x = 0;
     setting->screen_y = 0;
     setting->Menu_Frame = DEF_MENU_FRAME;
