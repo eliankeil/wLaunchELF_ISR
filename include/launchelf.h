@@ -110,6 +110,8 @@ enum COLOR {
 	COLOR_GRAPH2,
 	COLOR_GRAPH3,
 	COLOR_GRAPH4,
+	COLOR_EDITOR_BG, // nuevo: fondo del editor
+	COLOR_EDITOR_TEXT, // nuevo: texto del editor
 
 	COLOR_COUNT
 };
