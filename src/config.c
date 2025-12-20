@@ -849,8 +849,13 @@ int loadConfig(char *mainMsg, char *CNF)
 		else if (!strcmp(name, "Menu_Hide_Paths"))
 			setting->Hide_Paths = atoi(value);
 		//---------- NB: color settings moved to scanSkinCNF
-		else if (!strcmp(name, "Menu_Pages"))
-			setting->numCNF = atoi(value);
+		else if (!strcmp(name, "Menu_Pages")) {
+   			setting->numCNF = atoi(value);
+    // Validar rango para evitar valores disparatados
+    		if (setting->numCNF < 1 || setting->numCNF > 16) {
+        		setting->numCNF = DEF_NUMCNF; // normalmente 1
+    			}
+			}
 		else if (!strcmp(name, "GUI_Swap_Keys"))
 			setting->swapKeys = atoi(value);
 		else if (!strcmp(name, "NET_HOSTwrite"))
