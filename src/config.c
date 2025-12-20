@@ -177,6 +177,8 @@ static size_t storeSkinCNF(char *cnf_buf)
 	        "GUI_Col_6_ABGR = %08X\r\n"
 	        "GUI_Col_7_ABGR = %08X\r\n"
 	        "GUI_Col_8_ABGR = %08X\r\n"
+			"EditorBGColor = %08X\r\n"
+			"EditorTextColor = %08X\r\n"
 	        "SKIN_FILE = %s\r\n"
 	        "GUI_SKIN_FILE = %s\r\n"
 	        "SKIN_Brightness = %d\r\n"
@@ -195,6 +197,8 @@ static size_t storeSkinCNF(char *cnf_buf)
 	        (u32)setting->color[COLOR_GRAPH2],  //Col_6
 	        (u32)setting->color[COLOR_GRAPH3],  //Col_7
 	        (u32)setting->color[COLOR_GRAPH4],  //Col_8
+			(u32)setting->color[COLOR_EDITOR_BG],   // Editor fondo
+			(u32)setting->color[COLOR_EDITOR_TEXT], // Editor texto
 	        setting->skin,                      //SKIN_FILE
 	        setting->GUI_skin,                  //GUI_SKIN_FILE
 	        setting->Brightness,                //SKIN_Brightness
@@ -343,6 +347,10 @@ int scanSkinCNF(char *name, char *value)
 		setting->color[COLOR_GRAPH3] = hextoul(value);
 	else if (!strcmp(name, "GUI_Col_8_ABGR"))
 		setting->color[COLOR_GRAPH4] = hextoul(value);
+	else if (!strcmp(name, "EditorBGColor"))
+    	setting->color[COLOR_EDITOR_BG] = hextoul(value);
+	else if (!strcmp(name, "EditorTextColor"))
+    	setting->color[COLOR_EDITOR_TEXT] = hextoul(value);
 	//----------
 	else if (!strcmp(name, "SKIN_FILE"))
 		strcpy(setting->skin, value);
@@ -621,88 +629,91 @@ void saveConfig(char *mainMsg, char *CNF)
 //---------------------------------------------------------------------------
 void initConfig(void)
 {
-	int i;
+    int i;
 
-	if (setting != NULL)
-		free(setting);
-	setting = (SETTING *)malloc(sizeof(SETTING));
+    if (setting != NULL)
+        free(setting);
+    setting = (SETTING *)malloc(sizeof(SETTING));
 
-	sprintf(setting->Misc, "%s/", LNG_DEF(MISC));
-	sprintf(setting->Misc_PS2Disc, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2Disc));
-	sprintf(setting->Misc_FileBrowser, "%s/%s", LNG_DEF(MISC), LNG_DEF(FileBrowser));
-	sprintf(setting->Misc_PS2Browser, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2Browser));
-	sprintf(setting->Misc_PS2Net, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2Net));
-	sprintf(setting->Misc_PS2PowerOff, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2PowerOff));
-	sprintf(setting->Misc_HddManager, "%s/%s", LNG_DEF(MISC), LNG_DEF(HddManager));
-	sprintf(setting->Misc_TextEditor, "%s/%s", LNG_DEF(MISC), LNG_DEF(TextEditor));
-	sprintf(setting->Misc_JpgViewer, "%s/%s", LNG_DEF(MISC), LNG_DEF(JpgViewer));
-	sprintf(setting->Misc_Configure, "%s/%s", LNG_DEF(MISC), LNG_DEF(Configure));
-	sprintf(setting->Misc_Load_CNFprev, "%s/%s", LNG_DEF(MISC), LNG_DEF(Load_CNFprev));
-	sprintf(setting->Misc_Load_CNFnext, "%s/%s", LNG_DEF(MISC), LNG_DEF(Load_CNFnext));
-	sprintf(setting->Misc_Set_CNF_Path, "%s/%s", LNG_DEF(MISC), LNG_DEF(Set_CNF_Path));
-	sprintf(setting->Misc_Load_CNF, "%s/%s", LNG_DEF(MISC), LNG_DEF(Load_CNF));
-	sprintf(setting->Misc_ShowFont, "%s/%s", LNG_DEF(MISC), LNG_DEF(ShowFont));
-	sprintf(setting->Misc_Debug_Info, "%s/%s", LNG_DEF(MISC), LNG_DEF(Debug_Info));
-	sprintf(setting->Misc_About_uLE, "%s/%s", LNG_DEF(MISC), LNG_DEF(About_uLE));
-	sprintf(setting->Misc_Show_Build_Info, "%s/%s", LNG(MISC), LNG(Build_Info));
-	sprintf(setting->Misc_OSDSYS, "%s/%s", LNG_DEF(MISC), LNG_DEF(OSDSYS));
+    sprintf(setting->Misc, "%s/", LNG_DEF(MISC));
+    sprintf(setting->Misc_PS2Disc, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2Disc));
+    sprintf(setting->Misc_FileBrowser, "%s/%s", LNG_DEF(MISC), LNG_DEF(FileBrowser));
+    sprintf(setting->Misc_PS2Browser, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2Browser));
+    sprintf(setting->Misc_PS2Net, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2Net));
+    sprintf(setting->Misc_PS2PowerOff, "%s/%s", LNG_DEF(MISC), LNG_DEF(PS2PowerOff));
+    sprintf(setting->Misc_HddManager, "%s/%s", LNG_DEF(MISC), LNG_DEF(HddManager));
+    sprintf(setting->Misc_TextEditor, "%s/%s", LNG_DEF(MISC), LNG_DEF(TextEditor));
+    sprintf(setting->Misc_JpgViewer, "%s/%s", LNG_DEF(MISC), LNG_DEF(JpgViewer));
+    sprintf(setting->Misc_Configure, "%s/%s", LNG_DEF(MISC), LNG_DEF(Configure));
+    sprintf(setting->Misc_Load_CNFprev, "%s/%s", LNG_DEF(MISC), LNG_DEF(Load_CNFprev));
+    sprintf(setting->Misc_Load_CNFnext, "%s/%s", LNG_DEF(MISC), LNG_DEF(Load_CNFnext));
+    sprintf(setting->Misc_Set_CNF_Path, "%s/%s", LNG_DEF(MISC), LNG_DEF(Set_CNF_Path));
+    sprintf(setting->Misc_Load_CNF, "%s/%s", LNG_DEF(MISC), LNG_DEF(Load_CNF));
+    sprintf(setting->Misc_ShowFont, "%s/%s", LNG_DEF(MISC), LNG_DEF(ShowFont));
+    sprintf(setting->Misc_Debug_Info, "%s/%s", LNG_DEF(MISC), LNG_DEF(Debug_Info));
+    sprintf(setting->Misc_About_uLE, "%s/%s", LNG_DEF(MISC), LNG_DEF(About_uLE));
+    sprintf(setting->Misc_Show_Build_Info, "%s/%s", LNG(MISC), LNG(Build_Info));
+    sprintf(setting->Misc_OSDSYS, "%s/%s", LNG_DEF(MISC), LNG_DEF(OSDSYS));
 
-	for (i = 0; i < SETTING_LK_COUNT; i++) {
-		setting->LK_Path[i][0] = 0;
-		setting->LK_Title[i][0] = 0;
-		setting->LK_Flag[i] = 0;
-	}
-	for (i = 0; i < MAX_PATH_PAD; i++)
-		PathPad[i][0] = 0;
+    for (i = 0; i < SETTING_LK_COUNT; i++) {
+        setting->LK_Path[i][0] = 0;
+        setting->LK_Title[i][0] = 0;
+        setting->LK_Flag[i] = 0;
+    }
+    for (i = 0; i < MAX_PATH_PAD; i++)
+        PathPad[i][0] = 0;
 
-	strcpy(setting->LK_Path[SETTING_LK_CIRCLE], setting->Misc_FileBrowser);
-	setting->LK_Flag[SETTING_LK_CIRCLE] = 1;
-	strcpy(setting->LK_Path[SETTING_LK_TRIANGLE], setting->Misc_About_uLE);
-	setting->LK_Flag[SETTING_LK_TRIANGLE] = 1;
-	setting->usbkbd_file[0] = '\0';
-	setting->kbdmap_file[0] = '\0';
-	setting->skin[0] = '\0';
-	setting->GUI_skin[0] = '\0';
-	setting->Menu_Title[0] = '\0';
-	setting->CNF_Path[0] = '\0';
-	setting->lang_file[0] = '\0';
-	setting->font_file[0] = '\0';
-	setting->timeout = DEF_TIMEOUT;
-	setting->Hide_Paths = DEF_HIDE_PATHS;
-	setting->color[COLOR_BACKGR] = DEF_COLOR1;
-	setting->color[COLOR_FRAME] = DEF_COLOR2;
-	setting->color[COLOR_SELECT] = DEF_COLOR3;
-	setting->color[COLOR_TEXT] = DEF_COLOR4;
-	setting->color[COLOR_GRAPH1] = DEF_COLOR5;
-	setting->color[COLOR_GRAPH2] = DEF_COLOR6;
-	setting->color[COLOR_GRAPH3] = DEF_COLOR7;
-	setting->color[COLOR_GRAPH4] = DEF_COLOR8;
-	setting->screen_x = 0;
-	setting->screen_y = 0;
-	setting->Menu_Frame = DEF_MENU_FRAME;
-	setting->Show_Menu = DEF_MENU;
-	setting->numCNF = DEF_NUMCNF;
-	setting->swapKeys = DEF_SWAPKEYS;
-	setting->HOSTwrite = DEF_HOSTWRITE;
-	setting->Brightness = DEF_BRIGHT;
-	setting->TV_mode = TV_mode_AUTO;
-	setting->Popup_Opaque = DEF_POPUP_OPAQUE;
-	setting->Init_Delay = DEF_INIT_DELAY;
-	setting->usbkbd_used = DEF_USBKBD_USED;
-	setting->reboot_iop_elf_load = DEF_STARTUP_RESET_IOP_ELFOAD;
-	setting->Show_Titles = DEF_SHOW_TITLES;
-	setting->PathPad_Lock = DEF_PATHPAD_LOCK;
-	setting->JpgView_Timer = -1;  //only used to detect missing variable
-	setting->JpgView_Trans = -1;  //only used to detect missing variable
-	setting->JpgView_Full = DEF_JPGVIEW_FULL;
-	setting->PSU_HugeNames = DEF_PSU_HUGENAMES;
-	setting->PSU_DateNames = DEF_PSU_DATENAMES;
-	setting->PSU_NoOverwrite = DEF_PSU_NOOVERWRITE;
-	setting->FB_NoIcons = DEF_FB_NOICONS;
+    strcpy(setting->LK_Path[SETTING_LK_CIRCLE], setting->Misc_FileBrowser);
+    setting->LK_Flag[SETTING_LK_CIRCLE] = 1;
+    strcpy(setting->LK_Path[SETTING_LK_TRIANGLE], setting->Misc_About_uLE);
+    setting->LK_Flag[SETTING_LK_TRIANGLE] = 1;
+    setting->usbkbd_file[0] = '\0';
+    setting->kbdmap_file[0] = '\0';
+    setting->skin[0] = '\0';
+    setting->GUI_skin[0] = '\0';
+    setting->Menu_Title[0] = '\0';
+    setting->CNF_Path[0] = '\0';
+    setting->lang_file[0] = '\0';
+    setting->font_file[0] = '\0';
+    setting->timeout = DEF_TIMEOUT;
+    setting->Hide_Paths = DEF_HIDE_PATHS;
+    setting->color[COLOR_BACKGR] = DEF_COLOR1;
+    setting->color[COLOR_FRAME]  = DEF_COLOR2;
+    setting->color[COLOR_SELECT] = DEF_COLOR3;
+    setting->color[COLOR_TEXT]   = DEF_COLOR4;
+    setting->color[COLOR_GRAPH1] = DEF_COLOR5;
+    setting->color[COLOR_GRAPH2] = DEF_COLOR6;
+    setting->color[COLOR_GRAPH3] = DEF_COLOR7;
+    setting->color[COLOR_GRAPH4] = DEF_COLOR8;
+    // nuevos: colores del editor (defaults clásicos)
+    setting->color[COLOR_EDITOR_BG]   = GS_SETREG_RGBA(160,160,160,0); // gris claro original
+    setting->color[COLOR_EDITOR_TEXT] = GS_SETREG_RGBA(0,0,0,0);       // negro original
+    setting->screen_x = 0;
+    setting->screen_y = 0;
+    setting->Menu_Frame = DEF_MENU_FRAME;
+    setting->Show_Menu = DEF_MENU;
+    setting->numCNF = DEF_NUMCNF;
+    setting->swapKeys = DEF_SWAPKEYS;
+    setting->HOSTwrite = DEF_HOSTWRITE;
+    setting->Brightness = DEF_BRIGHT;
+    setting->TV_mode = TV_mode_AUTO;
+    setting->Popup_Opaque = DEF_POPUP_OPAQUE;
+    setting->Init_Delay = DEF_INIT_DELAY;
+    setting->usbkbd_used = DEF_USBKBD_USED;
+    setting->reboot_iop_elf_load = DEF_STARTUP_RESET_IOP_ELFOAD;
+    setting->Show_Titles = DEF_SHOW_TITLES;
+    setting->PathPad_Lock = DEF_PATHPAD_LOCK;
+    setting->JpgView_Timer = -1;  //only used to detect missing variable
+    setting->JpgView_Trans = -1;  //only used to detect missing variable
+    setting->JpgView_Full = DEF_JPGVIEW_FULL;
+    setting->PSU_HugeNames = DEF_PSU_HUGENAMES;
+    setting->PSU_DateNames = DEF_PSU_DATENAMES;
+    setting->PSU_NoOverwrite = DEF_PSU_NOOVERWRITE;
+    setting->FB_NoIcons = DEF_FB_NOICONS;
 }
 //------------------------------
 //endfunc initConfig
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- 
 // Load LAUNCHELF.CNF (or LAUNCHELFx.CNF with multiple pages)
 // polo: ADD load SKIN_FILE string
 // suloku: ADD load MAIN_SKIN string //dlanor: changed to GUI_SKIN_FILE
