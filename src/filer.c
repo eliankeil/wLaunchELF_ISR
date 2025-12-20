@@ -4478,6 +4478,8 @@ int getFilePath(char *out, int cnfmode)
 									genCmpFileExt(files[top + i].name, "TXT") || 
 									genCmpFileExt(files[top + i].name, "CFG") || 
 									genCmpFileExt(files[top + i].name, "CNF") || 
+									genCmpFileExt(files[top + i].name, "YAML") ||
+									genCmpFileExt(files[top + i].name, "YML") ||
 									genCmpFileExt(files[top + i].name, "INI") || 
 									genCmpFileExt(files[top + i].name, "CHT") || 
 									genCmpFileExt(files[top + i].name, "JPG") || 
