@@ -4,8 +4,6 @@
 #include "launchelf.h"
 
 enum {
-	COL_NORM_BG = GS_SETREG_RGBA(160, 160, 160, 0),
-	COL_NORM_TEXT = GS_SETREG_RGBA(0, 0, 0, 0),
 	COL_MARK_BG = GS_SETREG_RGBA(0, 40, 160, 0),
 	COL_MARK_TEXT = GS_SETREG_RGBA(160, 160, 160, 0),
 	COL_CUR_INSERT = GS_SETREG_RGBA(0, 160, 0, 0),
@@ -51,9 +49,10 @@ enum {
 #define OTHER 1  // CR/LF Return Text Mode, 'All Normal System'.
 #define UNIX 2   // CR Return Text Mode, Unix.
 #define MAC 3    // LF Return Text Mode, Mac.
-
 #define TMP 10   // Temp Buffer For Add / Remove Char.
 #define EDIT 11  // Edit Buffer For Copy / Cut / Paste.
+#define COL_NORM_BG   setting->color[COLOR_EDITOR_BG]
+#define COL_NORM_TEXT setting->color[COLOR_EDITOR_TEXT]
 
 static u8 *TextBuffer[12];         // Text Buffers, 10 Windows Max + 1 TMP + 1 EDIT. See above.
 static int Window[10][NUM_STATE],  // Windowing System, 10 Windows Max.
