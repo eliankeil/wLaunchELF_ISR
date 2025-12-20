@@ -2014,7 +2014,7 @@ int IsSupportedFileType(char *path)
 	if (strchr(path, ':') != NULL) {
 		if (genCmpFileExt(path, "ELF")) {
 			return (checkELFheader(path) >= 0);
-		} else if ((genCmpFileExt(path, "TXT") || genCmpFileExt(path, "CHT") || genCmpFileExt(path, "CFG") || genCmpFileExt(path, "INI")  || genCmpFileExt(path, "CNF") ) || (genCmpFileExt(path, "JPG") || genCmpFileExt(path, "JPEG"))) {
+		} else if ((genCmpFileExt(path, "YML") || genCmpFileExt(path, "YAML") || genCmpFileExt(path, "TXT") || genCmpFileExt(path, "CHT") || genCmpFileExt(path, "CFG") || genCmpFileExt(path, "INI")  || genCmpFileExt(path, "CNF") ) || (genCmpFileExt(path, "JPG") || genCmpFileExt(path, "JPEG"))) {
 			return 1;
 		} else
 			return 0;
@@ -2272,7 +2272,7 @@ Recurse_for_ESR:  //Recurse here for PS2Disc command with ESR disc
 		LastDir[0] = 0;
 		getFilePath(tmp, FALSE);
 		if (tmp[0]) {
-			if (genCmpFileExt(tmp, "TXT") || genCmpFileExt(tmp, "CHT") || genCmpFileExt(tmp, "INI") || genCmpFileExt(tmp, "CFG") || genCmpFileExt(tmp, "CNF")) {
+			if (genCmpFileExt(tmp, "YML") || genCmpFileExt(tmp, "YAML") || genCmpFileExt(tmp, "TXT") || genCmpFileExt(tmp, "CHT") || genCmpFileExt(tmp, "INI") || genCmpFileExt(tmp, "CFG") || genCmpFileExt(tmp, "CNF")) {
 				if (setting->GUI_skin[0]) {
 					GUI_active = 0;
 					loadSkin(BACKGROUND_PIC, 0, 0);
