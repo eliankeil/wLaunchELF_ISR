@@ -881,7 +881,7 @@ void hddManager(void)
 			x = ((((SCREEN_WIDTH / 2 - 25) - Menu_start_x) / 2) + Menu_start_x) - (strlen(c) * FONT_WIDTH) / 2;
 			printXY(c, x, y, setting->color[COLOR_TEXT], TRUE, 0);
 
-			if (TV_mode != TV_mode_PAL)
+			if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 				y += FONT_HEIGHT + 10;
 			else
 				y += FONT_HEIGHT + 11;
@@ -907,7 +907,7 @@ void hddManager(void)
 			             SCREEN_WIDTH / 2 - 21, Frame_start_y,
 			             SCREEN_WIDTH / 2 - 19, Frame_end_y);
 
-			if (TV_mode != TV_mode_PAL)
+			if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 				y += FONT_HEIGHT + 11;
 			else
 				y += FONT_HEIGHT + 12;
@@ -928,13 +928,13 @@ void hddManager(void)
 				sprintf(c, "%s: %u %s", LNG(HDD_FREE), hddFreeSpace, LNG(MB));
 				printXY(c, x, y, setting->color[COLOR_TEXT], TRUE, ((SCREEN_WIDTH / 2 - 20) - SCREEN_MARGIN - 2 * FONT_WIDTH));
 
-				if (TV_mode != TV_mode_PAL)
+				if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 					ray = 45;
 				else
 					ray = 55;
 
 				x = ((((SCREEN_WIDTH / 2 - 25) - Menu_start_x) / 2) + Menu_start_x);
-				if (TV_mode != TV_mode_PAL)
+				if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 					y += ray + 20;
 				else
 					y += ray + 25;
@@ -949,7 +949,7 @@ void hddManager(void)
 					else
 						Color = setting->color[COLOR_GRAPH1];
 					x3 = ray * cosdgf(Angle);
-					if (TV_mode != TV_mode_PAL)
+					if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 						y3 = (ray - 5) * sindgf(Angle);
 					else
 						y3 = (ray)*sindgf(Angle);
@@ -963,7 +963,7 @@ void hddManager(void)
 				sprintf(c, "%d%% %s", hddFree, LNG(FREE));
 				printXY(c, x - FONT_WIDTH * 4, y - FONT_HEIGHT / 4, setting->color[COLOR_TEXT], TRUE, 0);
 
-				if (TV_mode != TV_mode_PAL)
+				if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 					y += ray + 15;
 				else
 					y += ray + 20;
@@ -1056,7 +1056,7 @@ void hddManager(void)
 
 				if (pfsFree >= 0) {  //Will be negative when skipping this graph
 					x = ((((SCREEN_WIDTH / 2 - 25) - Menu_start_x) / 2) + Menu_start_x);
-					if (TV_mode != TV_mode_PAL)
+					if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 						y += ray + 20;
 					else
 						y += ray + 25;
@@ -1071,7 +1071,7 @@ void hddManager(void)
 						else
 							Color = setting->color[COLOR_GRAPH1];
 						x3 = ray * cosdgf(Angle);
-						if (TV_mode != TV_mode_PAL)
+						if ((TV_mode == TV_mode_NTSC) || (TV_mode == TV_mode_VGA))
 							y3 = (ray - 5) * sindgf(Angle);
 						else
 							y3 = (ray)*sindgf(Angle);

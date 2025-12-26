@@ -30,6 +30,7 @@ enum {
 	DEF_COLOR7 = GS_SETREG_RGBA(224, 224, 224, 0),  //Graph3
 	DEF_COLOR8 = GS_SETREG_RGBA(0, 0, 0, 0),        //Graph4
 #endif //CUSTOM_COLORS
+    DEF_INTERLACE = TRUE,
 	DEF_MENU_FRAME = TRUE,
 	DEF_MENU = TRUE,
 	DEF_NUMCNF = 1,
@@ -181,6 +182,7 @@ static size_t storeSkinCNF(char *cnf_buf)
 	        "GUI_SKIN_FILE = %s\r\n"
 	        "SKIN_Brightness = %d\r\n"
 	        "TV_mode = %d\r\n"
+			"Screen_Interlace = %d\r\n"
 	        "Screen_Offset_X = %d\r\n"
 	        "Screen_Offset_Y = %d\r\n"
 	        "Popup_Opaque = %d\r\n"
@@ -199,6 +201,7 @@ static size_t storeSkinCNF(char *cnf_buf)
 	        setting->GUI_skin,                  //GUI_SKIN_FILE
 	        setting->Brightness,                //SKIN_Brightness
 	        setting->TV_mode,                   //TV_mode
+			setting->interlace,      			//Screen_Interlace
 	        setting->screen_x,                  //Screen_X
 	        setting->screen_y,                  //Screen_Y
 	        setting->Popup_Opaque,              //Popup_Opaque
@@ -353,6 +356,8 @@ int scanSkinCNF(char *name, char *value)
 	//----------
 	else if (!strcmp(name, "TV_mode"))
 		setting->TV_mode = atoi(value);
+	else if (!strcmp(name, "Screen_Interlace"))
+        setting->interlace = atoi(value);
 	else if (!strcmp(name, "Screen_Offset_X"))
 		setting->screen_x = atoi(value);
 	else if (!strcmp(name, "Screen_Offset_Y"))
@@ -679,6 +684,7 @@ void initConfig(void)
 	setting->color[COLOR_GRAPH4] = DEF_COLOR8;
 	setting->screen_x = 0;
 	setting->screen_y = 0;
+	setting->interlace = DEF_INTERLACE;
 	setting->Menu_Frame = DEF_MENU_FRAME;
 	setting->Show_Menu = DEF_MENU;
 	setting->numCNF = DEF_NUMCNF;
@@ -1320,7 +1326,7 @@ static void Config_Screen(void)
 						    GS_SETREG_RGBA(rgb[s / 3][0], rgb[s / 3][1], rgb[s / 3][2], 0);
 					}
 				} else if (s == CONFIG_SCREEN_TV_MODE) {
-					setting->TV_mode = (setting->TV_mode + 1) % TV_mode_COUNT;  //Change between the various modes
+					setting->TV_mode = (setting->TV_mode + 1) % 4;  //Change between 0,1,2,3
 					updateScreenMode();
 				} else if (s == CONFIG_SCREEN_TV_STARTX) {
 					if (setting->screen_x < gsGlobal->StartX) {
@@ -1364,6 +1370,7 @@ static void Config_Screen(void)
 					setting->TV_mode = TV_mode_AUTO;
 					setting->screen_x = 0;
 					setting->screen_y = 0;
+					setting->interlace = DEF_INTERLACE;
 					setting->Menu_Frame = DEF_MENU_FRAME;
 					setting->Show_Menu = DEF_MENU;
 					setting->Brightness = DEF_BRIGHT;
