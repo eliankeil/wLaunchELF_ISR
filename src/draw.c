@@ -556,8 +556,8 @@ static void applyGSParams(void) {
             Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
         } else {
             SCREEN_WIDTH = 640;
-            SCREEN_HEIGHT = 224;   // NTSC 240p
-            Menu_end_y = Menu_start_y + 6 * FONT_HEIGHT;
+            SCREEN_HEIGHT = 448;   // NTSC 240p
+            Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
         }
     }
 
