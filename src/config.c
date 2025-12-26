@@ -1449,8 +1449,8 @@ static void Config_Screen(void)
 			y += FONT_HEIGHT;
 			y += FONT_HEIGHT / 2;
 
-			    sprintf(c, "  %s: %s", LNG(Screen_Interlace),
-                	setting->interlace ? LNG(ON) : LNG(OFF));
+			sprintf(c, "  Interlace: %s",
+        		setting->interlace ? "ON" : "OFF");
             printXY(c, x, y, setting->color[COLOR_TEXT], TRUE, 0);
             y += FONT_HEIGHT;
             y += FONT_HEIGHT / 2;
