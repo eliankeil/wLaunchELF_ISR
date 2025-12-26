@@ -550,12 +550,13 @@ static void applyGSParams(void) {
 
     default:
     case GS_MODE_NTSC:
-        SCREEN_WIDTH = 640;
         if (setting->interlace) {
+            SCREEN_WIDTH = 640;
             SCREEN_HEIGHT = 448;   // NTSC 480i
             Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
         } else {
-            SCREEN_HEIGHT = 448;   // NTSC 240p
+            SCREEN_WIDTH = 320;
+            SCREEN_HEIGHT = 224;   // NTSC 240p
             Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
         }
     }
