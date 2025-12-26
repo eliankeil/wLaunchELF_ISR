@@ -571,7 +571,7 @@ static void applyGSParams(void) {
       SCREEN_HEIGHT = 224; // NTSC 240p
       Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
       gsDisplay = makeDISPLAY(223, 2559, 0, 3, 26, 700);
-      gsSyncV = makeSYNCV(6, 480, 6, 26, 6, 2);
+      gsSyncV = makeSYNCV(6, 240, 6, 26, 6, 2);
     }
   }
 
