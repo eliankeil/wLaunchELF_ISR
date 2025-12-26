@@ -1,10 +1,13 @@
 //--------------------------------------------------------------
 // File name:   draw.c
 //--------------------------------------------------------------
+#include "gsm.h"
 #include "launchelf.h"
 
 GSGLOBAL *gsGlobal;
 GSTEXTURE TexSkin, TexPreview, TexPicture, TexThumb[MAX_ENTRY], TexIcon[2];
+u64 gsDisplay;
+u64 gsSyncV;
 int testskin, testsetskin, testjpg, testthumb;
 int SCREEN_WIDTH = 640;
 int SCREEN_HEIGHT = 448;
@@ -530,6 +533,10 @@ void drawLastMsg(void) {
 }
 //--------------------------------------------------------------
 //--------------------------------------------------------------
+#include "gsm.h" // donde definiste makeDISPLAY y makeSYNCV
+#include <kernel.h>
+#include <tamtypes.h>
+
 static void applyGSParams(void) {
   switch (gsGlobal->Mode) {
   case GS_MODE_VGA_640_60:
@@ -543,19 +550,13 @@ static void applyGSParams(void) {
     if (setting->interlace) {
       SCREEN_HEIGHT = 512; // PAL 576i
       Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
-      // Valores de sincronización para 576i
-      gsGlobal->Interlace = GS_INTERLACED;
-      gsGlobal->Field = GS_FIELD;
-      gsGlobal->Display = makeDISPLAY(511, 2559, 0, 3, 70, 720);
-      gsGlobal->SyncV = makeSYNCV(5, 576, 5, 33, 5, 1);
+      gsDisplay = makeDISPLAY(511, 2559, 0, 3, 70, 720);
+      gsSyncV = makeSYNCV(5, 576, 5, 33, 5, 1);
     } else {
       SCREEN_HEIGHT = 256; // PAL 288p
       Menu_end_y = Menu_start_y + 13 * FONT_HEIGHT;
-      // Valores de sincronización para 288p
-      gsGlobal->Interlace = GS_NONINTERLACED;
-      gsGlobal->Field = GS_FRAME;
-      gsGlobal->Display = makeDISPLAY(255, 2559, 0, 3, 37, 720);
-      gsGlobal->SyncV = makeSYNCV(5, 576, 5, 33, 5, 4);
+      gsDisplay = makeDISPLAY(255, 2559, 0, 3, 37, 720);
+      gsSyncV = makeSYNCV(5, 576, 5, 33, 5, 4);
     }
     break;
 
@@ -565,19 +566,13 @@ static void applyGSParams(void) {
     if (setting->interlace) {
       SCREEN_HEIGHT = 448; // NTSC 480i
       Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-      // Valores de sincronización para 480i
-      gsGlobal->Interlace = GS_INTERLACED;
-      gsGlobal->Field = GS_FIELD;
-      gsGlobal->Display = makeDISPLAY(447, 2559, 0, 3, 46, 700);
-      gsGlobal->SyncV = makeSYNCV(6, 480, 6, 26, 6, 1);
+      gsDisplay = makeDISPLAY(447, 2559, 0, 3, 46, 700);
+      gsSyncV = makeSYNCV(6, 480, 6, 26, 6, 1);
     } else {
       SCREEN_HEIGHT = 224; // NTSC 240p
       Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
-      // Valores de sincronización para 240p (tomados de OPL/GSM)
-      gsGlobal->Interlace = GS_NONINTERLACED;
-      gsGlobal->Field = GS_FRAME;
-      gsGlobal->Display = makeDISPLAY(223, 2559, 0, 3, 26, 700);
-      gsGlobal->SyncV = makeSYNCV(6, 480, 6, 26, 6, 2);
+      gsDisplay = makeDISPLAY(223, 2559, 0, 3, 26, 700);
+      gsSyncV = makeSYNCV(6, 480, 6, 26, 6, 2);
     }
   }
 
@@ -586,6 +581,18 @@ static void applyGSParams(void) {
 
   gsGlobal->Width = SCREEN_WIDTH;
   gsGlobal->Height = SCREEN_HEIGHT;
+
+  if (setting->interlace) {
+    gsGlobal->Interlace = GS_INTERLACED;
+    gsGlobal->Field = GS_FIELD;
+  } else {
+    gsGlobal->Interlace = GS_NONINTERLACED;
+    gsGlobal->Field = GS_FRAME;
+  }
+
+  // Escritura directa a los registros del GS
+  *(volatile u64 *)0x12000080 = gsDisplay; // DISPLAY1
+  *(volatile u64 *)0x12000090 = gsSyncV;   // SYNCV
 }
 
 static void initScreenParams(void) {
