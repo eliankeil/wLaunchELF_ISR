@@ -483,192 +483,194 @@ void drawPopSprite(u64 color, int x1, int y1, int x2, int y2)
 	}
 }
 //--------------------------------------------------------------
-//drawOpSprite exists only to eliminate the use of primitive sprite functions
-//that are specific to the graphics lib used (currently gsKit). So normally
-//it will merely be a 'wrapper' function for one of the lib calls, except
-//that it will also perform any coordinate adjustments (if any)implemented for
-//the functions drawSprite and drawPopSprite, to keep all of them compatible.
+// drawOpSprite exists only to eliminate the use of primitive sprite functions
+// that are specific to the graphics lib used (currently gsKit). So normally
+// it will merely be a 'wrapper' function for one of the lib calls, except
+// that it will also perform any coordinate adjustments (if any) implemented for
+// the functions drawSprite and drawPopSprite, to keep all of them compatible.
 //
 void drawOpSprite(u64 color, int x1, int y1, int x2, int y2)
 {
-	int y_off = (setting->interlace) ? 0 : (y1 & 1);
+    int y_off = (setting->interlace) ? 0 : (y1 & 1);
     y1 -= y_off;
     y2 -= y_off;
 
-	gsKit_prim_sprite(gsGlobal, x1, y1, x2, y2, 0, color);
+    gsKit_prim_sprite(gsGlobal, x1, y1, x2, y2, 0, color);
 }
 //--------------------------------------------------------------
 void drawMsg(const char *msg)
 {
-	strncpy(LastMessage, msg, MAX_TEXT_LINE);
-	LastMessage[MAX_TEXT_LINE] = '\0';
-	drawSprite(setting->color[COLOR_BACKGR], 0, Menu_message_y - 1,
-	           SCREEN_WIDTH, Frame_start_y);
-	printXY(msg, SCREEN_MARGIN, Menu_message_y, setting->color[COLOR_SELECT], TRUE, 0);
-	drawScr();
+    strncpy(LastMessage, msg, MAX_TEXT_LINE);
+    LastMessage[MAX_TEXT_LINE] = '\0';
+    drawSprite(setting->color[COLOR_BACKGR], 0, Menu_message_y - 1,
+               SCREEN_WIDTH, Frame_start_y);
+    printXY(msg, SCREEN_MARGIN, Menu_message_y, setting->color[COLOR_SELECT], TRUE, 0);
+    drawScr();
 }
 //--------------------------------------------------------------
 void drawLastMsg(void)
 {
-	drawSprite(setting->color[COLOR_BACKGR], 0, Menu_message_y - 1,
-	           SCREEN_WIDTH, Frame_start_y);
-	printXY(LastMessage, SCREEN_MARGIN, Menu_message_y, setting->color[COLOR_SELECT], TRUE, 0);
-	drawScr();
+    drawSprite(setting->color[COLOR_BACKGR], 0, Menu_message_y - 1,
+               SCREEN_WIDTH, Frame_start_y);
+    printXY(LastMessage, SCREEN_MARGIN, Menu_message_y, setting->color[COLOR_SELECT], TRUE, 0);
+    drawScr();
 }
 //--------------------------------------------------------------
 static void applyGSParams(void)
 {
-	switch (gsGlobal->Mode) {
-		case GS_MODE_VGA_640_60:
-			SCREEN_WIDTH = 640;
-			SCREEN_HEIGHT = 448;
-			Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-			break;
-		case GS_MODE_PAL:
-			SCREEN_WIDTH = 640;
-			SCREEN_HEIGHT = 512;
-			Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
-			break;
-		default:
-		case GS_MODE_NTSC:
-			SCREEN_WIDTH = 640;
-			SCREEN_HEIGHT = 448;
-			Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-	}  // end TV_Mode change
+    switch (gsGlobal->Mode) {
+        case GS_MODE_VGA_640_60:
+            SCREEN_WIDTH = 640;
+            SCREEN_HEIGHT = 448;
+            Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+            break;
+        case GS_MODE_PAL:
+            SCREEN_WIDTH = 640;
+            SCREEN_HEIGHT = 512;
+            Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
+            break;
+        default:
+        case GS_MODE_NTSC:
+            SCREEN_WIDTH = 640;
+            SCREEN_HEIGHT = 448;
+            Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+    }  // end TV_Mode change
 
-	Frame_end_y = Menu_end_y + 3;
-	Menu_tooltip_y = Frame_end_y + LINE_THICKNESS + 2;
+    Frame_end_y = Menu_end_y + 3;
+    Menu_tooltip_y = Frame_end_y + LINE_THICKNESS + 2;
 
-	    // Interlace Init
+    // Interlace Init
     if (setting->interlace) {
-       gsGlobal->Interlace = GS_INTERLACED;
-       gsGlobal->Field = GS_FIELD;
+        gsGlobal->Interlace = GS_INTERLACED;
+        gsGlobal->Field = GS_FIELD;
     } else {
-       gsGlobal->Interlace = GS_NONINTERLACED;
-       gsGlobal->Field = GS_FRAME;
+        gsGlobal->Interlace = GS_NONINTERLACED;
+        gsGlobal->Field = GS_FRAME;
     }
 
-	// Init screen size
-	gsGlobal->Width = SCREEN_WIDTH;
-	    if (gsGlobal->Mode == GS_MODE_VGA_640_60) {
+    // Init screen size
+    gsGlobal->Width = SCREEN_WIDTH;
+    if (gsGlobal->Mode == GS_MODE_VGA_640_60) {
         gsGlobal->Height = SCREEN_HEIGHT;
     } else {
-        //Interlaced video mode
+        // Interlaced video mode
         gsGlobal->Height = setting->interlace ? SCREEN_HEIGHT : SCREEN_HEIGHT / 2;
     }
 }
 
 static void initScreenParams(void)
 {
-	// Ensure that the offsets are within valid ranges.
-	if (setting->screen_x < -gsGlobal->StartX)
-		setting->screen_x = -gsGlobal->StartX;
-	else if (setting->screen_x > gsGlobal->StartX)
-		setting->screen_x = gsGlobal->StartX;
+    // Ensure that the offsets are within valid ranges.
+    if (setting->screen_x < -gsGlobal->StartX)
+        setting->screen_x = -gsGlobal->StartX;
+    else if (setting->screen_x > gsGlobal->StartX)
+        setting->screen_x = gsGlobal->StartX;
 
-	if (setting->screen_y < -gsGlobal->StartY)
-		setting->screen_y = -gsGlobal->StartY;
-	else if (setting->screen_y > gsGlobal->StartY)
-		setting->screen_y = gsGlobal->StartY;
+    if (setting->screen_y < -gsGlobal->StartY)
+        setting->screen_y = -gsGlobal->StartY;
+    else if (setting->screen_y > gsGlobal->StartY)
+        setting->screen_y = gsGlobal->StartY;
 }
 
 void setupGS(void)
 {
-	int New_TV_mode = setting->TV_mode;
+    int New_TV_mode = setting->TV_mode;
 
-	// GS Init
-	gsGlobal = gsKit_init_global();
+    // GS Init
+    gsGlobal = gsKit_init_global();
 
-	if (New_TV_mode == TV_mode_AUTO) {         //If no forced request
-		New_TV_mode = uLE_InitializeRegion();  //Let console region decide TV_mode
-	}
+    if (New_TV_mode == TV_mode_AUTO) {         // If no forced request
+        New_TV_mode = uLE_InitializeRegion();  // Let console region decide TV_mode
+    }
 
-	// Screen display mode
-	TV_mode = New_TV_mode;
-	switch (New_TV_mode) {
-		case TV_mode_PAL:
-			gsGlobal->Mode = GS_MODE_PAL;
-			break;
-		case TV_mode_VGA:
-			gsGlobal->Mode = GS_MODE_VGA_640_60;
-			break;
-		default:
-		case TV_mode_NTSC:
-			gsGlobal->Mode = GS_MODE_NTSC;
-			break;
-	}
+    // Screen display mode
+    TV_mode = New_TV_mode;
+    switch (New_TV_mode) {
+        case TV_mode_PAL:
+            gsGlobal->Mode = GS_MODE_PAL;
+            break;
+        case TV_mode_VGA:
+            gsGlobal->Mode = GS_MODE_VGA_640_60;
+            break;
+        default:
+        case TV_mode_NTSC:
+            gsGlobal->Mode = GS_MODE_NTSC;
+            break;
+    }
 
-	// Screen size and Interlace Init
+    // Screen size and Interlace Init
     Old_Interlace = setting->interlace;
-	applyGSParams();
+    applyGSParams();
 
-	// Buffer Init
-	gsGlobal->PrimAAEnable = GS_SETTING_ON;
-	gsGlobal->DoubleBuffering = GS_SETTING_OFF;
-	gsGlobal->ZBuffering = GS_SETTING_OFF;
+    // Buffer Init
+    gsGlobal->PrimAAEnable = GS_SETTING_ON;
+    gsGlobal->DoubleBuffering = GS_SETTING_OFF;
+    gsGlobal->ZBuffering = GS_SETTING_OFF;
 
-	// DMAC Init
-	dmaKit_init(D_CTRL_RELE_OFF, D_CTRL_MFD_OFF, D_CTRL_STS_UNSPEC, D_CTRL_STD_OFF, D_CTRL_RCYC_8, 1 << DMA_CHANNEL_GIF);
-	dmaKit_chan_init(DMA_CHANNEL_GIF);
+    // DMAC Init
+    dmaKit_init(D_CTRL_RELE_OFF, D_CTRL_MFD_OFF, D_CTRL_STS_UNSPEC,
+                D_CTRL_STD_OFF, D_CTRL_RCYC_8, 1 << DMA_CHANNEL_GIF);
+    dmaKit_chan_init(DMA_CHANNEL_GIF);
 
-	// Screen Init (will also clear screen once)
-	gsKit_init_screen(gsGlobal);
+    // Screen Init (will also clear screen once)
+    gsKit_init_screen(gsGlobal);
 
-	// Screen Position Init
-	initScreenParams();
+    // Screen Position Init
+    initScreenParams();
 
-	gsKit_set_display_offset(gsGlobal, setting->screen_x, setting->screen_y);
+    gsKit_set_display_offset(gsGlobal, setting->screen_x, setting->screen_y);
 
-	// Screen render mode
-	gsKit_mode_switch(gsGlobal, GS_ONESHOT);
+    // Screen render mode
+    gsKit_mode_switch(gsGlobal, GS_ONESHOT);
 }
 //--------------------------------------------------------------
 void updateScreenMode(void)
 {
-	int setGS_flag = 0;
-	int New_TV_mode = setting->TV_mode;
+    int setGS_flag = 0;
+    int New_TV_mode = setting->TV_mode;
 
-	if (New_TV_mode == TV_mode_AUTO) {         //If no forced request
-		New_TV_mode = uLE_InitializeRegion();  //Let console region decide TV_mode
-	}
+    if (New_TV_mode == TV_mode_AUTO) {         // If no forced request
+        New_TV_mode = uLE_InitializeRegion();  // Let console region decide TV_mode
+    }
 
-	if (New_TV_mode != TV_mode) {
-		setGS_flag = 1;
-		TV_mode = New_TV_mode;
+    if (New_TV_mode != TV_mode) {
+        setGS_flag = 1;
+        TV_mode = New_TV_mode;
 
-		switch (New_TV_mode) {
-			case TV_mode_PAL:
-				gsGlobal->Mode = GS_MODE_PAL;
-				break;
-			case TV_mode_VGA:
-				gsGlobal->Mode = GS_MODE_VGA_640_60;
-				break;
-			default:
-			case TV_mode_NTSC:
-				gsGlobal->Mode = GS_MODE_NTSC;
-				break;
-		}
-	}  // end TV_Mode change
+        switch (New_TV_mode) {
+            case TV_mode_PAL:
+                gsGlobal->Mode = GS_MODE_PAL;
+                break;
+            case TV_mode_VGA:
+                gsGlobal->Mode = GS_MODE_VGA_640_60;
+                break;
+            default:
+            case TV_mode_NTSC:
+                gsGlobal->Mode = GS_MODE_NTSC;
+                break;
+        }
+    }  // end TV_Mode change
 
     if (setting->interlace != Old_Interlace) {
         setGS_flag = 1;
         Old_Interlace = setting->interlace;
     }  // end Interlace change
 
-	// Init screen parameters
-	applyGSParams();
+    // Init screen parameters
+    applyGSParams();
 
-	if (setGS_flag) {
-		// Init screen modes
-		gsKit_init_screen(gsGlobal);
-	}
+    if (setGS_flag) {
+        // Init screen modes
+        gsKit_init_screen(gsGlobal);
+    }
 
-	// Screen Position Init
-	initScreenParams();
+    // Screen Position Init
+    initScreenParams();
 
-	// Init screen position
-	gsKit_set_display_offset(gsGlobal, setting->screen_x, setting->screen_y);
+    // Init screen position
+    gsKit_set_display_offset(gsGlobal, setting->screen_x, setting->screen_y);
 }
+
 //--------------------------------------------------------------
 void loadSkin(int Picture, char *Path, int ThumbNum)
 {

@@ -1298,93 +1298,99 @@ static void Config_Screen(void)
 					s += 3;
 			} else if ((!swapKeys && new_pad & PAD_CROSS) || (swapKeys && new_pad & PAD_CIRCLE)) {  //User pressed CANCEL=>Subtract/Clear
 				event |= 2;                                                                         //event |= valid pad command
-				if (s < CONFIG_SCREEN_AFT_COLORS) {
-					if (rgb[s / 3][s % 3] > 0) {
-						rgb[s / 3][s % 3]--;
-						setting->color[s / 3] =
-						    GS_SETREG_RGBA(rgb[s / 3][0], rgb[s / 3][1], rgb[s / 3][2], 0);
-					}
-				} else if (s == CONFIG_SCREEN_TV_STARTX) {
-					if (setting->screen_x > -gsGlobal->StartX) {
-						setting->screen_x--;
-						updateScreenMode();
-					}
-				} else if (s == CONFIG_SCREEN_TV_STARTY) {
-					if (setting->screen_y > -gsGlobal->StartY) {
-						setting->screen_y--;
-						updateScreenMode();
-					}
-				} else if (s == CONFIG_SCREEN_MENU_TITLE) {  //cursor is at Menu_Title
-					setting->Menu_Title[0] = '\0';
-				}
-			} else if ((swapKeys && new_pad & PAD_CROSS) || (!swapKeys && new_pad & PAD_CIRCLE)) {  //User pressed OK=>Add/Ok/Edit
-				event |= 2;                                                                         //event |= valid pad command
-				if (s < CONFIG_SCREEN_AFT_COLORS) {
-					if (rgb[s / 3][s % 3] < 255) {
-						rgb[s / 3][s % 3]++;
-						setting->color[s / 3] =
-						    GS_SETREG_RGBA(rgb[s / 3][0], rgb[s / 3][1], rgb[s / 3][2], 0);
-					}
-				} else if (s == CONFIG_SCREEN_TV_MODE) {
-					setting->TV_mode = (setting->TV_mode + 1) % 4;  //Change between 0,1,2,3
-					updateScreenMode();
-				} else if (s == CONFIG_SCREEN_TV_STARTX) {
-					if (setting->screen_x < gsGlobal->StartX) {
-						setting->screen_x++;
-						updateScreenMode();
-					}
-				} else if (s == CONFIG_SCREEN_TV_STARTY) {
-					if (setting->screen_y < gsGlobal->StartY) {
-						setting->screen_y++;
-						updateScreenMode();
-					}
-				} else if (s == CONFIG_SCREEN_SKIN) {
-					Config_Skin();
-				} else if (s == CONFIG_SCREEN_LOAD_SKIN_BROWSER) {
-					loadSkinBrowser();
-				} else if (s == CONFIG_SCREEN_SAVE_SKIN_BROWSER) {
-					saveSkinBrowser();
-				} else if (s == CONFIG_SCREEN_MENU_TITLE) {  //cursor is at Menu_Title
-					char tmp[MAX_MENU_TITLE + 1];
-					strcpy(tmp, setting->Menu_Title);
-					if (keyboard(tmp, MAX_MENU_TITLE) >= 0)
-						strcpy(setting->Menu_Title, tmp);
-				} else if (s == CONFIG_SCREEN_MENU_FRAME) {
-					setting->Menu_Frame = !setting->Menu_Frame;
-				} else if (s == CONFIG_SCREEN_POPUP_OPAQUE) {
-					setting->Popup_Opaque = !setting->Popup_Opaque;
-				} else if (s == CONFIG_SCREEN_RETURN) {  //Always put 'RETURN' next to last
-					return;
-				} else if (s == CONFIG_SCREEN_DEFAULT) {  //Always put 'DEFAULT SCREEN SETTINGS' last
-					setting->skin[0] = '\0';
-					setting->GUI_skin[0] = '\0';
-					loadSkin(BACKGROUND_PIC, 0, 0);
-					setting->color[COLOR_BACKGR] = DEF_COLOR1;
-					setting->color[COLOR_FRAME] = DEF_COLOR2;
-					setting->color[COLOR_SELECT] = DEF_COLOR3;
-					setting->color[COLOR_TEXT] = DEF_COLOR4;
-					setting->color[COLOR_GRAPH1] = DEF_COLOR5;
-					setting->color[COLOR_GRAPH2] = DEF_COLOR6;
-					setting->color[COLOR_GRAPH3] = DEF_COLOR7;
-					setting->color[COLOR_GRAPH4] = DEF_COLOR8;
-					setting->TV_mode = TV_mode_AUTO;
-					setting->screen_x = 0;
-					setting->screen_y = 0;
-					setting->interlace = DEF_INTERLACE;
-					setting->Menu_Frame = DEF_MENU_FRAME;
-					setting->Show_Menu = DEF_MENU;
-					setting->Brightness = DEF_BRIGHT;
-					setting->Popup_Opaque = DEF_POPUP_OPAQUE;
-					updateScreenMode();
+                if (s < CONFIG_SCREEN_AFT_COLORS) {
+                    if (rgb[s / 3][s % 3] > 0) {
+                        rgb[s / 3][s % 3]--;
+                        setting->color[s / 3] =
+                            GS_SETREG_RGBA(rgb[s / 3][0], rgb[s / 3][1], rgb[s / 3][2], 0);
+                    }
+                } else if (s == CONFIG_SCREEN_TV_STARTX) {
+                    if (setting->screen_x > -gsGlobal->StartX) {
+                        setting->screen_x--;
+                        updateScreenMode();
+                    }
+                } else if (s == CONFIG_SCREEN_TV_STARTY) {
+                    if (setting->screen_y > -gsGlobal->StartY) {
+                        setting->screen_y--;
+                        updateScreenMode();
+                    }
+                } else if (s == CONFIG_SCREEN_INTERLACE) {  // cursor at Screen Interlace
+                    setting->interlace = !setting->interlace;
+                    updateScreenMode();
+                } else if (s == CONFIG_SCREEN_MENU_TITLE) {  // cursor is at Menu_Title
+                    setting->Menu_Title[0] = '\0';
+                }
+            } else if ((swapKeys && new_pad & PAD_CROSS) || (!swapKeys && new_pad & PAD_CIRCLE)) {  // User pressed OK=>Add/Ok/Edit
+                event |= 2;                                                                         // event |= valid pad command
+                if (s < CONFIG_SCREEN_AFT_COLORS) {
+                    if (rgb[s / 3][s % 3] < 255) {
+                        rgb[s / 3][s % 3]++;
+                        setting->color[s / 3] =
+                            GS_SETREG_RGBA(rgb[s / 3][0], rgb[s / 3][1], rgb[s / 3][2], 0);
+                    }
+                } else if (s == CONFIG_SCREEN_TV_MODE) {
+                    setting->TV_mode = (setting->TV_mode + 1) % 4;  // Change between 0,1,2,3
+                    updateScreenMode();
+                } else if (s == CONFIG_SCREEN_TV_STARTX) {
+                    if (setting->screen_x < gsGlobal->StartX) {
+                        setting->screen_x++;
+                        updateScreenMode();
+                    }
+                } else if (s == CONFIG_SCREEN_TV_STARTY) {
+                    if (setting->screen_y < gsGlobal->StartY) {
+                        setting->screen_y++;
+                        updateScreenMode();
+                    }
+                } else if (s == CONFIG_SCREEN_INTERLACE) {  // cursor at Screen Interlace
+                    setting->interlace = !setting->interlace;
+                    updateScreenMode();
+                } else if (s == CONFIG_SCREEN_SKIN) {
+                    Config_Skin();
+                } else if (s == CONFIG_SCREEN_LOAD_SKIN_BROWSER) {
+                    loadSkinBrowser();
+                } else if (s == CONFIG_SCREEN_SAVE_SKIN_BROWSER) {
+                    saveSkinBrowser();
+                } else if (s == CONFIG_SCREEN_MENU_TITLE) {  // cursor is at Menu_Title
+                    char tmp[MAX_MENU_TITLE + 1];
+                    strcpy(tmp, setting->Menu_Title);
+                    if (keyboard(tmp, MAX_MENU_TITLE) >= 0)
+                        strcpy(setting->Menu_Title, tmp);
+                } else if (s == CONFIG_SCREEN_MENU_FRAME) {
+                    setting->Menu_Frame = !setting->Menu_Frame;
+                } else if (s == CONFIG_SCREEN_POPUP_OPAQUE) {
+                    setting->Popup_Opaque = !setting->Popup_Opaque;
+                } else if (s == CONFIG_SCREEN_RETURN) {  // Always put 'RETURN' next to last
+                    return;
+                } else if (s == CONFIG_SCREEN_DEFAULT) {  // Always put 'DEFAULT SCREEN SETTINGS' last
+                    setting->skin[0] = '\0';
+                    setting->GUI_skin[0] = '\0';
+                    loadSkin(BACKGROUND_PIC, 0, 0);
+                    setting->color[COLOR_BACKGR] = DEF_COLOR1;
+                    setting->color[COLOR_FRAME] = DEF_COLOR2;
+                    setting->color[COLOR_SELECT] = DEF_COLOR3;
+                    setting->color[COLOR_TEXT] = DEF_COLOR4;
+                    setting->color[COLOR_GRAPH1] = DEF_COLOR5;
+                    setting->color[COLOR_GRAPH2] = DEF_COLOR6;
+                    setting->color[COLOR_GRAPH3] = DEF_COLOR7;
+                    setting->color[COLOR_GRAPH4] = DEF_COLOR8;
+                    setting->TV_mode = TV_mode_AUTO;
+                    setting->screen_x = 0;
+                    setting->screen_y = 0;
+                    setting->interlace = DEF_INTERLACE;
+                    setting->Menu_Frame = DEF_MENU_FRAME;
+                    setting->Show_Menu = DEF_MENU;
+                    setting->Brightness = DEF_BRIGHT;
+                    setting->Popup_Opaque = DEF_POPUP_OPAQUE;
+                    updateScreenMode();
 
-					for (i = 0; i < COLOR_COUNT; i++) {
-						rgb[i][0] = setting->color[i] & 0xFF;
-						rgb[i][1] = setting->color[i] >> 8 & 0xFF;
-						rgb[i][2] = setting->color[i] >> 16 & 0xFF;
-					}
-				}
-			} else if (new_pad & PAD_TRIANGLE)
-				return;
+                    for (i = 0; i < COLOR_COUNT; i++) {
+                        rgb[i][0] = setting->color[i] & 0xFF;
+                        rgb[i][1] = (setting->color[i] >> 8) & 0xFF;
+                        rgb[i][2] = (setting->color[i] >> 16) & 0xFF;
+                    }
+                }
+            } else if (new_pad & PAD_TRIANGLE)
+                return;
 		}
 
 		if (event || post_event) {  //NB: We need to update two frame buffers per event
