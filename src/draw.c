@@ -2,9 +2,9 @@
 // File name:   draw.c
 //--------------------------------------------------------------
 #include "gsm.h"
+#include "launchelf.h"
 #include <kernel.h>
 #include <tamtypes.h>
-#include "launchelf.h"
 
 GSGLOBAL *gsGlobal;
 GSTEXTURE TexSkin, TexPreview, TexPicture, TexThumb[MAX_ENTRY], TexIcon[2];
@@ -651,12 +651,17 @@ void setupGS(void) {
 
   // Screen Position Init
   initScreenParams();
-
   gsKit_set_display_offset(gsGlobal, setting->screen_x, setting->screen_y);
 
   // Screen render mode
   gsKit_mode_switch(gsGlobal, GS_ONESHOT);
+
+  // >>> Aplicar los registros GSM después de gsKit <<<
+  *(volatile u64 *)0x12000080 = gsDisplay; // DISPLAY1
+  *(volatile u64 *)0x120000A0 = gsDisplay; // DISPLAY2
+  *(volatile u64 *)0x12000090 = gsSyncV;   // SYNCV
 }
+
 //--------------------------------------------------------------
 void updateScreenMode(void) {
   int setGS_flag = 0;
