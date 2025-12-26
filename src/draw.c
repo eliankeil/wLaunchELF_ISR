@@ -536,35 +536,48 @@ static void applyGSParams(void) {
         SCREEN_HEIGHT = 448;
         Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
         break;
+
     case GS_MODE_PAL:
         SCREEN_WIDTH = 640;
-        SCREEN_HEIGHT = 512;
-        Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
+        if (setting->interlace) {
+            SCREEN_HEIGHT = 512;   // PAL 576i
+            Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
+        } else {
+            SCREEN_HEIGHT = 256;   // PAL 288p
+            Menu_end_y = Menu_start_y + 13 * FONT_HEIGHT;
+        }
         break;
+
     default:
     case GS_MODE_NTSC:
         SCREEN_WIDTH = 640;
-        SCREEN_HEIGHT = 448;
-        Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+        if (setting->interlace) {
+            SCREEN_HEIGHT = 448;   // NTSC 480i
+            Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+        } else {
+            SCREEN_HEIGHT = 224;   // NTSC 240p
+            Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
+        }
     }
 
-    Frame_end_y = Menu_end_y + 3;
-    Menu_tooltip_y = Frame_end_y + LINE_THICKNESS + 2;
+    Frame_end_y     = Menu_end_y + 3;
+    Menu_tooltip_y  = Frame_end_y + LINE_THICKNESS + 2;
 
     gsGlobal->Width = SCREEN_WIDTH;
 
     if (setting->interlace) {
-        // VERDAD: Interlace ON = 480i
+        // Interlace ON = 480i/576i
         gsGlobal->Interlace = GS_INTERLACED;
         gsGlobal->Field     = GS_FIELD;
-        gsGlobal->Height    = SCREEN_HEIGHT;   // 448 NTSC, 512 PAL
+        gsGlobal->Height    = SCREEN_HEIGHT;
     } else {
-        // VERDAD: Interlace OFF = 240p
+        // Interlace OFF = 240p/288p
         gsGlobal->Interlace = GS_NONINTERLACED;
         gsGlobal->Field     = GS_FRAME;
-        gsGlobal->Height    = SCREEN_HEIGHT / 2;  // 224 NTSC, 256 PAL
+        gsGlobal->Height    = SCREEN_HEIGHT;
     }
 }
+
 
 
 
