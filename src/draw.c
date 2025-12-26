@@ -472,8 +472,9 @@ void setScrTmp(const char *msg0, const char *msg1) {
   printXY(msg1, x, Menu_tooltip_y, setting->color[COLOR_SELECT], TRUE, 0);
 }
 //--------------------------------------------------------------
+//--------------------------------------------------------------
 void drawSprite(u64 color, int x1, int y1, int x2, int y2) {
-  int y_off = (setting->interlace) ? 0 : (y1 & 1);
+  int y_off = (setting->interlace) ? (y1 & 1) : 0;
   y1 -= y_off;
   y2 -= y_off;
 
@@ -488,7 +489,7 @@ void drawSprite(u64 color, int x1, int y1, int x2, int y2) {
 }
 //--------------------------------------------------------------
 void drawPopSprite(u64 color, int x1, int y1, int x2, int y2) {
-  int y_off = (setting->interlace) ? 0 : (y1 & 1);
+  int y_off = (setting->interlace) ? (y1 & 1) : 0;
   y1 -= y_off;
   y2 -= y_off;
 
@@ -502,19 +503,14 @@ void drawPopSprite(u64 color, int x1, int y1, int x2, int y2) {
   }
 }
 //--------------------------------------------------------------
-// drawOpSprite exists only to eliminate the use of primitive sprite functions
-// that are specific to the graphics lib used (currently gsKit). So normally
-// it will merely be a 'wrapper' function for one of the lib calls, except
-// that it will also perform any coordinate adjustments (if any) implemented for
-// the functions drawSprite and drawPopSprite, to keep all of them compatible.
-//
 void drawOpSprite(u64 color, int x1, int y1, int x2, int y2) {
-  int y_off = (setting->interlace) ? 0 : (y1 & 1);
+  int y_off = (setting->interlace) ? (y1 & 1) : 0;
   y1 -= y_off;
   y2 -= y_off;
 
   gsKit_prim_sprite(gsGlobal, x1, y1, x2, y2, 0, color);
 }
+
 //--------------------------------------------------------------
 void drawMsg(const char *msg) {
   strncpy(LastMessage, msg, MAX_TEXT_LINE);
