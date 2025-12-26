@@ -736,7 +736,7 @@ static int drawMainScreen2(int TV_mode)
 		yo_config = -92;
 		xo_config = 370;
 	} else if (TV_mode == TV_mode_NTSC) {
-		printXY(c, x + 224, y + FONT_HEIGHT - 5, setting->color[COLOR_TEXT], TRUE, 0);
+		printXY(c, x + 448, y + FONT_HEIGHT - 5, setting->color[COLOR_TEXT], TRUE, 0);
 		y += FONT_HEIGHT - 3;
 		yo_first = 3;
 		yo_step = FONT_HEIGHT * 2 - 4;

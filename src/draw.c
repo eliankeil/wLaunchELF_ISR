@@ -26,8 +26,8 @@ int Frame_start_y =
 int Menu_start_y = SCREEN_MARGIN + 2 * FONT_HEIGHT + LINE_THICKNESS + 5;
 // dlanor: Menu_start_y is the 1st pixel line that may be used for main content
 // of a menu dlanor: values below are only calculated when a rez is activated
-int Menu_end_y; // Normal menu display should not use pixels at this line or
-                // beyond
+int Menu_end_y;     // Normal menu display should not use pixels at this line or
+                    // beyond
 int Frame_end_y;    // first line of frame bottom
 int Menu_tooltip_y; // Menus may also use this row for tooltips
 
@@ -529,58 +529,64 @@ void drawLastMsg(void) {
   drawScr();
 }
 //--------------------------------------------------------------
+//--------------------------------------------------------------
 static void applyGSParams(void) {
-    switch (gsGlobal->Mode) {
-    case GS_MODE_VGA_640_60:
-        SCREEN_WIDTH = 640;
-        SCREEN_HEIGHT = 448;
-        Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-        break;
+  switch (gsGlobal->Mode) {
+  case GS_MODE_VGA_640_60:
+    SCREEN_WIDTH = 640;
+    SCREEN_HEIGHT = 448;
+    Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+    break;
 
-    case GS_MODE_PAL:
-        SCREEN_WIDTH = 640;
-        if (setting->interlace) {
-            SCREEN_HEIGHT = 512;   // PAL 576i
-            Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
-        } else {
-            SCREEN_HEIGHT = 256;   // PAL 288p
-            Menu_end_y = Menu_start_y + 13 * FONT_HEIGHT;
-        }
-        break;
-
-    default:
-    case GS_MODE_NTSC:
-        if (setting->interlace) {
-            SCREEN_WIDTH = 640;
-            SCREEN_HEIGHT = 448;   // NTSC 480i
-            Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-        } else {
-            SCREEN_WIDTH = 640;
-            SCREEN_HEIGHT = 224;   // NTSC 240p
-            Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
-        }
-    }
-
-    Frame_end_y     = Menu_end_y + 3;
-    Menu_tooltip_y  = Frame_end_y + LINE_THICKNESS + 2;
-
-    gsGlobal->Width = SCREEN_WIDTH;
-
+  case GS_MODE_PAL:
+    SCREEN_WIDTH = 640;
     if (setting->interlace) {
-        // Interlace ON = 480i/576i
-        gsGlobal->Interlace = GS_INTERLACED;
-        gsGlobal->Field     = GS_FIELD;
-        gsGlobal->Height    = SCREEN_HEIGHT;
+      SCREEN_HEIGHT = 512; // PAL 576i
+      Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
+      // Valores de sincronización para 576i
+      gsGlobal->Interlace = GS_INTERLACED;
+      gsGlobal->Field = GS_FIELD;
+      gsGlobal->Display = makeDISPLAY(511, 2559, 0, 3, 70, 720);
+      gsGlobal->SyncV = makeSYNCV(5, 576, 5, 33, 5, 1);
     } else {
-        // Interlace OFF = 240p/288p
-        gsGlobal->Interlace = GS_NONINTERLACED;
-        gsGlobal->Field     = GS_FRAME;
-        gsGlobal->Height    = SCREEN_HEIGHT;
+      SCREEN_HEIGHT = 256; // PAL 288p
+      Menu_end_y = Menu_start_y + 13 * FONT_HEIGHT;
+      // Valores de sincronización para 288p
+      gsGlobal->Interlace = GS_NONINTERLACED;
+      gsGlobal->Field = GS_FRAME;
+      gsGlobal->Display = makeDISPLAY(255, 2559, 0, 3, 37, 720);
+      gsGlobal->SyncV = makeSYNCV(5, 576, 5, 33, 5, 4);
     }
+    break;
+
+  default:
+  case GS_MODE_NTSC:
+    SCREEN_WIDTH = 640;
+    if (setting->interlace) {
+      SCREEN_HEIGHT = 448; // NTSC 480i
+      Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+      // Valores de sincronización para 480i
+      gsGlobal->Interlace = GS_INTERLACED;
+      gsGlobal->Field = GS_FIELD;
+      gsGlobal->Display = makeDISPLAY(447, 2559, 0, 3, 46, 700);
+      gsGlobal->SyncV = makeSYNCV(6, 480, 6, 26, 6, 1);
+    } else {
+      SCREEN_HEIGHT = 224; // NTSC 240p
+      Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
+      // Valores de sincronización para 240p (tomados de OPL/GSM)
+      gsGlobal->Interlace = GS_NONINTERLACED;
+      gsGlobal->Field = GS_FRAME;
+      gsGlobal->Display = makeDISPLAY(223, 2559, 0, 3, 26, 700);
+      gsGlobal->SyncV = makeSYNCV(6, 480, 6, 26, 6, 2);
+    }
+  }
+
+  Frame_end_y = Menu_end_y + 3;
+  Menu_tooltip_y = Frame_end_y + LINE_THICKNESS + 2;
+
+  gsGlobal->Width = SCREEN_WIDTH;
+  gsGlobal->Height = SCREEN_HEIGHT;
 }
-
-
-
 
 static void initScreenParams(void) {
   // Ensure that the offsets are within valid ranges.
