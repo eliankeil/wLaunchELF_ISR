@@ -739,7 +739,7 @@ static int drawMainScreen2(int TV_mode)
 		printXY(c, x + 448, y + FONT_HEIGHT - 5, setting->color[COLOR_TEXT], TRUE, 0);
 		y += FONT_HEIGHT - 3;
 		yo_first = 3;
-		yo_step = FONT_HEIGHT * 2 - 4;
+		yo_step = FONT_HEIGHT * 1 - 2;
 		yo_config = -80;
 		xo_config = 360;
 	} else {  // TV_mode == TV_mode_VGA
