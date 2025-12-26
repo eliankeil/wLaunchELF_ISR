@@ -232,7 +232,7 @@ int uLE_cdDiscValid(void);
 int uLE_cdStop(void);
 int IsSupportedFileType(char *path);
 void loadFlashModules(void);
-} SETTING
+
 /* elf.c */
 int checkELFheader(char *filename);
 void RunLoaderElf(char *filename, char *);
