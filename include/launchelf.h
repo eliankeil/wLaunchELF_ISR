@@ -179,6 +179,7 @@ typedef struct
 	u64 color[8];
 	int screen_x;
 	int screen_y;
+	int interlace;
 	int numCNF;
 	int swapKeys;
 	int HOSTwrite;
@@ -231,7 +232,7 @@ int uLE_cdDiscValid(void);
 int uLE_cdStop(void);
 int IsSupportedFileType(char *path);
 void loadFlashModules(void);
-
+} SETTING
 /* elf.c */
 int checkELFheader(char *filename);
 void RunLoaderElf(char *filename, char *);

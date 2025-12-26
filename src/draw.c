@@ -14,7 +14,7 @@ u64 BrightColor;
 int updateScr_1;      //dlanor: flags screen updates for drawScr()
 int updateScr_2;      //dlanor: used for anti-flicker delay in drawScr()
 u64 updateScr_t = 0;  //dlanor: exit time of last drawScr()
-int Interlace;
+int Old_Interlace;
 
 char LastMessage[MAX_TEXT_LINE + 2];
 
