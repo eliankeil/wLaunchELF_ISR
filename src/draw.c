@@ -543,7 +543,7 @@ static void applyGSParams(void) {
             SCREEN_HEIGHT = 512;   // PAL 576i
             Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
         } else {
-            SCREEN_HEIGHT = 128;   // PAL 288p
+            SCREEN_HEIGHT = 256;   // PAL 288p
             Menu_end_y = Menu_start_y + 13 * FONT_HEIGHT;
         }
         break;
@@ -555,7 +555,7 @@ static void applyGSParams(void) {
             SCREEN_HEIGHT = 448;   // NTSC 480i
             Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
         } else {
-            SCREEN_HEIGHT = 112;   // NTSC 240p
+            SCREEN_HEIGHT = 448;   // NTSC 240p
             Menu_end_y = Menu_start_y + 11 * FONT_HEIGHT;
         }
     }
