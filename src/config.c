@@ -1436,8 +1436,6 @@ static void Config_Screen(void)
 				strcat(c, "PAL");
 			else if (setting->TV_mode == TV_mode_VGA)
 				strcat(c, "VGA");
-			else if (setting->TV_mode == TV_mode_480P)
-				strcat(c, "Progressive");
 			else
 				strcat(c, "AUTO");
 			printXY(c, x, y, setting->color[COLOR_TEXT], TRUE, 0);

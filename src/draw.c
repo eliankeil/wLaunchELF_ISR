@@ -14,7 +14,7 @@ u64 BrightColor;
 int updateScr_1;      //dlanor: flags screen updates for drawScr()
 int updateScr_2;      //dlanor: used for anti-flicker delay in drawScr()
 u64 updateScr_t = 0;  //dlanor: exit time of last drawScr()
-int Interlace;
+int Old_Interlace;
 
 char LastMessage[MAX_TEXT_LINE + 2];
 
@@ -520,26 +520,19 @@ static void applyGSParams(void)
 {
 	switch (gsGlobal->Mode) {
 		case GS_MODE_VGA_640_60:
-		case GS_MODE_DTV_480P:
 			SCREEN_WIDTH = 640;
 			SCREEN_HEIGHT = 448;
-			gsGlobal->Interlace = GS_NONINTERLACED;
-			gsGlobal->Field = GS_FRAME;
 			Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
 			break;
 		case GS_MODE_PAL:
 			SCREEN_WIDTH = 640;
 			SCREEN_HEIGHT = 512;
-			gsGlobal->Interlace = GS_INTERLACED;
-			gsGlobal->Field = GS_FIELD;
 			Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
 			break;
 		default:
 		case GS_MODE_NTSC:
 			SCREEN_WIDTH = 640;
 			SCREEN_HEIGHT = 448;
-			gsGlobal->Interlace = GS_INTERLACED;
-			gsGlobal->Field = GS_FIELD;
 			Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
 	}  // end TV_Mode change
 
@@ -596,9 +589,6 @@ void setupGS(void)
 		case TV_mode_PAL:
 			gsGlobal->Mode = GS_MODE_PAL;
 			break;
-		case TV_mode_480P:
-			gsGlobal->Mode = GS_MODE_DTV_480P;
-			break;
 		case TV_mode_VGA:
 			gsGlobal->Mode = GS_MODE_VGA_640_60;
 			break;
@@ -649,9 +639,6 @@ void updateScreenMode(void)
 		switch (New_TV_mode) {
 			case TV_mode_PAL:
 				gsGlobal->Mode = GS_MODE_PAL;
-				break;
-			case TV_mode_480P:
-				gsGlobal->Mode = GS_MODE_DTV_480P;
 				break;
 			case TV_mode_VGA:
 				gsGlobal->Mode = GS_MODE_VGA_640_60;
