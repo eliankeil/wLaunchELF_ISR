@@ -530,50 +530,49 @@ void drawLastMsg(void) {
 }
 //--------------------------------------------------------------
 static void applyGSParams(void) {
-  switch (gsGlobal->Mode) {
-  case GS_MODE_VGA_640_60:
-    SCREEN_WIDTH = 640;
-    SCREEN_HEIGHT = 448;
-    Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-    break;
-  case GS_MODE_PAL:
-    SCREEN_WIDTH = 640;
-    SCREEN_HEIGHT = 512;
-    Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
-    break;
-  default:
-  case GS_MODE_NTSC:
-    SCREEN_WIDTH = 640;
-    SCREEN_HEIGHT = 448;
-    Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
-  } // end TV_Mode change
-
-  Frame_end_y = Menu_end_y + 3;
-  Menu_tooltip_y = Frame_end_y + LINE_THICKNESS + 2;
-
-  // Interlace Init
-  if (setting->interlace) {
-    gsGlobal->Interlace = GS_INTERLACED;
-    gsGlobal->Field = GS_FIELD;
-  } else {
-    gsGlobal->Interlace = GS_NONINTERLACED;
-    gsGlobal->Field = GS_FRAME;
-  }
-
-  // Init screen size
-  gsGlobal->Width = SCREEN_WIDTH;
-  if (gsGlobal->Mode == GS_MODE_VGA_640_60) {
-    gsGlobal->Height = SCREEN_HEIGHT; // VGA siempre progresivo
-  } else {
-    if (setting->interlace) {
-      // NTSC/PAL entrelazado: cada campo es la mitad
-      gsGlobal->Height = SCREEN_HEIGHT / 2;
-    } else {
-      // NTSC/PAL progresivo: altura completa
-      gsGlobal->Height = SCREEN_HEIGHT;
+    switch (gsGlobal->Mode) {
+    case GS_MODE_VGA_640_60:
+        SCREEN_WIDTH = 640;
+        SCREEN_HEIGHT = 448;
+        Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
+        break;
+    case GS_MODE_PAL:
+        SCREEN_WIDTH = 640;
+        SCREEN_HEIGHT = 512;
+        Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
+        break;
+    default:
+    case GS_MODE_NTSC:
+        SCREEN_WIDTH = 640;
+        SCREEN_HEIGHT = 448;
+        Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
     }
-  }
+
+    Frame_end_y = Menu_end_y + 3;
+    Menu_tooltip_y = Frame_end_y + LINE_THICKNESS + 2;
+
+    gsGlobal->Width = SCREEN_WIDTH;
+
+    if (gsGlobal->Mode == GS_MODE_VGA_640_60) {
+        // VGA siempre progresivo
+        gsGlobal->Interlace = GS_NONINTERLACED;
+        gsGlobal->Field     = GS_FRAME;
+        gsGlobal->Height    = SCREEN_HEIGHT;
+    } else {
+        if (setting->interlace) {
+            // NTSC/PAL en 240p/288p
+            gsGlobal->Interlace = GS_NONINTERLACED;
+            gsGlobal->Field     = GS_FRAME;
+            gsGlobal->Height    = SCREEN_HEIGHT / 2;  // 224 NTSC, 256 PAL
+        } else {
+            // NTSC/PAL progresivo completo
+            gsGlobal->Interlace = GS_NONINTERLACED;
+            gsGlobal->Field     = GS_FRAME;
+            gsGlobal->Height    = SCREEN_HEIGHT;      // 448 NTSC, 512 PAL
+        }
+    }
 }
+
 
 static void initScreenParams(void) {
   // Ensure that the offsets are within valid ranges.
