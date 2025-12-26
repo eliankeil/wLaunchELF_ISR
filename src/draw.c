@@ -2,6 +2,8 @@
 // File name:   draw.c
 //--------------------------------------------------------------
 #include "gsm.h"
+#include <kernel.h>
+#include <tamtypes.h>
 #include "launchelf.h"
 
 GSGLOBAL *gsGlobal;
@@ -533,9 +535,6 @@ void drawLastMsg(void) {
 }
 //--------------------------------------------------------------
 //--------------------------------------------------------------
-#include "gsm.h" // donde definiste makeDISPLAY y makeSYNCV
-#include <kernel.h>
-#include <tamtypes.h>
 
 static void applyGSParams(void) {
   switch (gsGlobal->Mode) {
