@@ -553,25 +553,19 @@ static void applyGSParams(void) {
 
     gsGlobal->Width = SCREEN_WIDTH;
 
-    if (gsGlobal->Mode == GS_MODE_VGA_640_60) {
-        // VGA siempre progresivo
+    if (setting->interlace) {
+        // VERDAD: Interlace ON = 480i
+        gsGlobal->Interlace = GS_INTERLACED;
+        gsGlobal->Field     = GS_FIELD;
+        gsGlobal->Height    = SCREEN_HEIGHT;   // 448 NTSC, 512 PAL
+    } else {
+        // VERDAD: Interlace OFF = 240p
         gsGlobal->Interlace = GS_NONINTERLACED;
         gsGlobal->Field     = GS_FRAME;
-        gsGlobal->Height    = SCREEN_HEIGHT;
-    } else {
-        if (setting->interlace) {
-            // NTSC/PAL en 240p/288p
-            gsGlobal->Interlace = GS_NONINTERLACED;
-            gsGlobal->Field     = GS_FRAME;
-            gsGlobal->Height    = SCREEN_HEIGHT / 2;  // 224 NTSC, 256 PAL
-        } else {
-            // NTSC/PAL progresivo completo
-            gsGlobal->Interlace = GS_NONINTERLACED;
-            gsGlobal->Field     = GS_FRAME;
-            gsGlobal->Height    = SCREEN_HEIGHT;      // 448 NTSC, 512 PAL
-        }
+        gsGlobal->Height    = SCREEN_HEIGHT / 2;  // 224 NTSC, 256 PAL
     }
 }
+
 
 
 static void initScreenParams(void) {
