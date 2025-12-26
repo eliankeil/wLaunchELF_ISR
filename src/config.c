@@ -1519,6 +1519,8 @@ static void Config_Screen(void)
 				//Here y is almost correct, except for additional group spacing
 				if (s >= CONFIG_SCREEN_AFT_COLORS)  //if cursor at or beyond TV mode choice
 					y += FONT_HEIGHT / 2;           //adjust for half-row space below colours
+				if (s >= CONFIG_SCREEN_INTERLACE)   // NUEVO: debajo de Screen Interlace 
+					y += FONT_HEIGHT / 2;
 				if (s >= CONFIG_SCREEN_TV_STARTX)   //if cursor at or beyond screen offsets
 					y += FONT_HEIGHT / 2;           //adjust for half-row space below TV mode choice
 				if (s >= CONFIG_SCREEN_SKIN)        //if cursor at or beyond 'SKIN SETTINGS'
