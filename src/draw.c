@@ -634,7 +634,7 @@ void setupGS(void) {
 
   // Screen size and Interlace Init
   Old_Interlace = setting->interlace;
-  applyGSParams();
+  applyGSParams(); // aquí calculás gsDisplay y gsSyncV
 
   // Buffer Init
   gsGlobal->PrimAAEnable = GS_SETTING_ON;
@@ -657,9 +657,12 @@ void setupGS(void) {
   gsKit_mode_switch(gsGlobal, GS_ONESHOT);
 
   // >>> Aplicar los registros GSM después de gsKit <<<
-  *(volatile u64 *)0x12000080 = gsDisplay; // DISPLAY1
-  *(volatile u64 *)0x120000A0 = gsDisplay; // DISPLAY2
-  *(volatile u64 *)0x12000090 = gsSyncV;   // SYNCV
+  if (!setting->interlace) {
+    // Sólo en progresivo (240p/288p) forzamos los registros
+    *(volatile u64 *)0x12000080 = gsDisplay; // DISPLAY1
+    *(volatile u64 *)0x120000A0 = gsDisplay; // DISPLAY2
+    *(volatile u64 *)0x12000090 = gsSyncV;   // SYNCV
+  }
 }
 
 //--------------------------------------------------------------
