@@ -655,9 +655,9 @@ void setupGS(void) {
   // >>> Aplicar los registros GSM después de gsKit <<<
   if (!setting->interlace) {
     // Sólo en progresivo (240p/288p) forzamos los registros
-    *(volatile u64 *)0x12000080 = gsDisplay; // DISPLAY1
-    *(volatile u64 *)0x120000A0 = gsDisplay; // DISPLAY2
-    *(volatile u64 *)0x12000090 = gsSyncV;   // SYNCV
+    *(volatile u64 *)0x12000080 = makeDISPLAY(223, 2559, 0, 3, 26, 700); // DISPLAY1
+    *(volatile u64 *)0x120000A0 = makeDISPLAY(223, 2559, 0, 3, 26 + 224, 700); // DISPLAY2 con offset vertical
+    *(volatile u64 *)0x12000090 = makeSYNCV(6, 480, 6, 26, 6, 2); // SYNCV
   }
 }
 
