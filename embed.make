@@ -27,11 +27,17 @@ $(EE_ASM_DIR)mx4sio_bd.s: iop/__precompiled/mx4sio_bd.irx | $(EE_ASM_DIR)
 	
 $(EE_ASM_DIR)mmceman_irx.s: iop/__precompiled/mmceman.irx | $(EE_ASM_DIR)
 	$(BIN2S) $< $@ mmceman_irx
+ 
+$(EE_ASM_DIR)extflash_irx.s: iop/__precompiled/extflash.irx | $(EE_ASM_DIR)
+	$(BIN2S) $< $@ extflash_irx
+
+$(EE_ASM_DIR)xfromman_irx.s: iop/__precompiled/xfromman.irx | $(EE_ASM_DIR)
+	$(BIN2S) $< $@ xfromman_irx
+
 #---{ USB }---#
 
 $(EE_ASM_DIR)usbd_irx.s: $(PS2SDK)/iop/irx/usbd.irx | $(EE_ASM_DIR)
 	$(BIN2S) $< $@ usbd_irx
-
 ifeq ($(EXFAT),1)
 $(EE_ASM_DIR)bdm_irx.s:iop/__precompiled/bdm.irx | $(EE_ASM_DIR)
 	$(BIN2S) $< $@ bdm_irx
@@ -61,10 +67,10 @@ $(EE_ASM_DIR)ioptrap_irx.s: $(PS2SDK)/iop/irx/ioptrap.irx | $(EE_ASM_DIR)
 $(EE_ASM_DIR)poweroff_irx.s: $(PS2SDK)/iop/irx/poweroff.irx | $(EE_ASM_DIR)
 	$(BIN2S) $< $@ poweroff_irx
 
-$(EE_ASM_DIR)iomanx_irx.s: $(PS2SDK)/iop/irx/iomanX.irx | $(EE_ASM_DIR)
+$(EE_ASM_DIR)iomanx_irx.s: iop/__precompiled/iomanX.irx | $(EE_ASM_DIR)
 	$(BIN2S) $< $@ iomanx_irx
 
-$(EE_ASM_DIR)filexio_irx.s: $(PS2SDK)/iop/irx/fileXio.irx | $(EE_ASM_DIR)
+$(EE_ASM_DIR)filexio_irx.s: iop/__precompiled/fileXio.irx | $(EE_ASM_DIR)
 	$(BIN2S) $< $@ filexio_irx
 
 $(EE_ASM_DIR)ps2dev9_irx.s: $(PS2SDK)/iop/irx/ps2dev9.irx | $(EE_ASM_DIR)
